@@ -1,0 +1,40 @@
+<div class="min-vh-100 d-flex align-items-center justify-content-center bg-light p-3">
+  <div class="card shadow-sm border-0 rounded-4 w-100" style="max-width: 960px;">
+    <div class="card-body p-4 p-md-5">
+      <h1 class="h3 fw-semibold mb-1">Unified Signal DateTimePicker</h1>
+      <p class="text-secondary mb-4">
+        Single input &amp; single unified dialog using Angular Signals, <code>&#64;for</code>,
+        <code>&#64;if</code>, Signal Forms, and pure Angular Material.
+      </p>
+
+
+      <!-- iterate over all the examples -->
+      <form novalidate class="row g-3 mb-4">
+        @for (item of fields(); track item.name) {
+          <div class="col-12 col-md-6 col-lg-4">
+            <app-datetimepicker
+              [formField]="item.field"
+              [label]="item.label"
+              [options]="item.options"
+              (dateTimeChange)="onPickerChange(item.name, $event)"
+            />
+          </div>
+        }
+      </form>
+
+      @if (lastEvent(); as ev) {
+        <div class="alert alert-primary py-2 px-3 mb-3 small">
+          <strong>Last Event (<code>dateTimeChange</code>):</strong>
+          <code>{{ ev.field }}</code> &rarr; <code>{{ ev.value | json }}</code>
+        </div>
+      }
+
+      <div class="bg-light border rounded-3 p-3">
+        <div class="fw-semibold small text-uppercase text-secondary mb-2">
+          Signal Form Model Value:
+        </div>
+        <pre class="mb-0 small">{{ formModel() | json }}</pre>
+      </div>
+    </div>
+  </div>
+</div>

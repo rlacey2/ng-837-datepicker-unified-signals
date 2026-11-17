@@ -1,0 +1,43 @@
+<h2 mat-dialog-title>{{ data.label }}</h2>
+
+<mat-dialog-content class="d-flex flex-column align-items-center gap-3 pt-2">
+  @if (showDate()) {
+    <mat-calendar
+      [selected]="selectedDate()"
+      [minDate]="data.options.minDate ?? null"
+      [maxDate]="data.options.maxDate ?? null"
+      (selectedChange)="onDateSelect($event)"
+      style="width: 296px;"
+    />
+  }
+
+  @if (showTime()) {
+    <div class="d-flex align-items-center justify-content-center gap-2">
+      <mat-form-field subscriptSizing="dynamic" [style.width]="width_hh_mm_inputs()">
+        <mat-label>Hour</mat-label>
+        <mat-select [value]="selectedHour()" (selectionChange)="selectedHour.set($event.value)">
+          @for (h of hours(); track h) {
+            <mat-option [value]="h">{{ pad(h) }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <span class="fw-bold fs-5">:</span>
+
+      <mat-form-field subscriptSizing="dynamic" style="width: 90px;">
+        <mat-label>Minute</mat-label>
+        <mat-select [value]="selectedMinute()" (selectionChange)="selectedMinute.set($event.value)">
+          @for (m of minutes(); track m) {
+            <mat-option [value]="m">{{ pad(m) }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="gap-2">
+  <button mat-button type="button" (click)="clear()">Clear</button>
+  <button mat-button type="button" (click)="dialogRef.close()">Cancel</button>
+  <button mat-flat-button type="button" (click)="confirm()">Set</button>
+</mat-dialog-actions>
