@@ -8,9 +8,26 @@ export function formatDateTimeValue(
 ): string {
   if (!val) return '';
 
-  const dd = val.getDate().toString().padStart(2, '0');
-  const mm = (val.getMonth() + 1).toString().padStart(2, '0');
-  const yyyy = val.getFullYear().toString();
+
+ const isUtc = typeof val === 'string' && /Z$/i.test(val);
+
+
+   const date = val instanceof Date
+    ? val
+    : new Date(val);
+
+  // Reject invalid dates.
+  if (isNaN(date.getTime())) return '';
+
+ 
+
+  const dd = (isUtc ? date.getUTCDate() : date.getDate())
+    .toString().padStart(2, '0');
+
+  const mm = ((isUtc ? date.getUTCMonth() : date.getMonth()) + 1)
+    .toString().padStart(2, '0');
+
+  const yyyy = isUtc ? date.getUTCFullYear() : date.getFullYear();
 
   let datePart = `${dd}/${mm}/${yyyy}`;
   if (dateFormat === 'MM/dd/yyyy') {
@@ -19,8 +36,8 @@ export function formatDateTimeValue(
     datePart = `${yyyy}-${mm}-${dd}`;
   }
 
-  const rawHours = val.getHours();
-  const min = val.getMinutes().toString().padStart(2, '0');
+  const rawHours = date.getHours();
+  const min = date.getMinutes().toString().padStart(2, '0');
 
   let timePart = '';
   if (hour24) {
