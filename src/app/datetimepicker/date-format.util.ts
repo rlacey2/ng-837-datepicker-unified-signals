@@ -10,8 +10,7 @@ export function formatDateTimeValue(
 
 
  const isUtc = typeof val === 'string' && /Z$/i.test(val);
-
-
+ 
    const date = val instanceof Date
     ? val
     : new Date(val);
@@ -19,8 +18,7 @@ export function formatDateTimeValue(
   // Reject invalid dates.
   if (isNaN(date.getTime())) return '';
 
- 
-
+  
   const dd = (isUtc ? date.getUTCDate() : date.getDate())
     .toString().padStart(2, '0');
 
