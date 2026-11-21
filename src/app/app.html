@@ -11,30 +11,72 @@
       <!-- iterate over all the examples -->
       <form novalidate class="row g-3 mb-4">
         @for (item of fields(); track item.name) {
-          <div class="col-12 col-md-6 col-lg-4">
-            <app-datetimepicker
-              [formField]="item.field"
-              [label]="item.label"
-              [options]="item.options"
-              (dateTimeChange)="onPickerChange(item.name, $event)"
-            />
-          </div>
+        <div class="col-12 col-md-6 col-lg-4">
+          <app-datetimepicker [formField]="item.field" [label]="item.label" [options]="item.options"
+            (dateTimeChange)="onPickerChange(item.name, $event)" />
+        </div>
         }
       </form>
 
+
       @if (lastEvent(); as ev) {
-        <div class="alert alert-primary py-2 px-3 mb-3 small">
-          <strong>Last Event (<code>dateTimeChange</code>):</strong>
-          <code>{{ ev.field }}</code> &rarr; <code>{{ ev.value | json }}</code>
-        </div>
+      <div class="alert alert-primary py-2 px-3 mb-3 small">
+        <strong>Last Event (<code>dateTimeChange</code>):</strong>
+        <code>{{ ev.field }}</code> &rarr; <code>{{ ev.value | json }}</code>
+      </div>
       }
 
       <div class="bg-light border rounded-3 p-3">
+       
         <div class="fw-semibold small text-uppercase text-secondary mb-2">
           Signal Form Model Value:
         </div>
         <pre class="mb-0 small">{{ formModel() | json }}</pre>
       </div>
+
+
+      <div class="row g-3 mb-2 mt-2">
+         signal options
+        <div class="col-12 col-md-6 col-lg-4">
+          <app-datetimepicker [formField]="demoForm.startDateTime" label="Start Date signal()"
+            [options]="startOptions()" />
+            </div>
+          <div class="col-12 col-md-6 col-lg-4">
+            <app-datetimepicker [formField]="demoForm.finishDateTime" label="Finish Date signal()"
+              [options]="finishOptions()" />
+          
+        </div>
+      </div>
+
+
+
+
+      <div class="row g-3 mb-4">
+        Static options
+ <div class="col-12 col-md-6 col-lg-4">
+        <app-datetimepicker [formField]="demoForm.startDateTime" label="Start Date" [options]="{
+    pickerType: 'both',
+    dateFormat: 'dd/MM/yyyy',
+    hour24: true,
+    stepMinute: 15
+  }" />
+
+</div>
+ <div class="col-12 col-md-6 col-lg-4">
+        <app-datetimepicker [formField]="demoForm.finishDateTime" label="Finish Date" [options]="{
+    pickerType: 'both',
+    dateFormat: 'dd/MM/yyyy',
+    hour24: true,
+    stepMinute: 15
+  }" />
+</div>
+
+
+      </div>
+
+
+
+
     </div>
   </div>
 </div>

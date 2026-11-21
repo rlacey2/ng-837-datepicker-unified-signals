@@ -26,6 +26,7 @@ import { formatDateTimeValue } from './date-format.util';
 export class DateTimePickerComponent implements FormValueControl<Date | null> {
   private readonly dialog = inject(MatDialog);
 
+  // The date/time value supplied by the parent form.
   readonly value = model<Date | null>(null);
   readonly disabled = input<boolean>(false);
   readonly touch = output<void>();

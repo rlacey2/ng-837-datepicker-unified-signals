@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, signal, computed } from '@angular/core';
 import { JsonPipe } from '@angular/common';
-import { form, FormField } from '@angular/forms/signals';
+import { form, FormField, validate } from '@angular/forms/signals';
 import { DateTimePickerComponent } from './datetimepicker/datetimepicker';
 import { DateTimePickerOptions } from './datetimepicker/datetimepicker.types';
 
@@ -10,6 +10,8 @@ export interface DemoFormModel {
   isoDateOnly: Date | null;
   usDateTime12h: Date | null;
   timeOnly24h: Date | null;
+     startDateTime: Date | null;
+    finishDateTime: Date | null;
 }
 
 @Component({
@@ -26,9 +28,37 @@ export class App {
     isoDateOnly: null,
     usDateTime12h: null,
     timeOnly24h: null,
+    startDateTime: null,
+    finishDateTime: null
   });
 
-  readonly demoForm = form(this.formModel);
+readonly demoForm = form(this.formModel, schema => {
+
+  // Finish must not be earlier than start.
+  validate(
+    schema.finishDateTime,
+    ({ value, valueOf }) => {
+
+      const finish = value();
+      const start = valueOf(schema.startDateTime);
+
+      if (!finish || !start) {
+        return null;
+      }
+
+      if (finish.getTime() < start.getTime()) {
+        return {
+          kind: 'invalidDateRange',
+          message: 'Finish date/time cannot be earlier than start date/time.'
+        };
+      }
+
+      return null;
+    }
+  );
+
+});
+  
   readonly lastEvent = signal<{ field: string; value: Date | null } | null>(null);
 
   readonly fields = computed(() => [
@@ -97,7 +127,36 @@ export class App {
     },
   ]);
 
+
+
+  // The start date cannot exceed the finish date.
+  readonly startOptions:any = computed(() => ({
+    dateFormat: 'dd/MM/yyyy',
+    pickerType: 'both',
+    
+    hour24: true,
+    stepMinute: 15,
+    maxDate: this.demoForm.finishDateTime().value()
+  }));
+ 
+
+  // The finish date cannot precede the start date.
+  readonly finishOptions:any = computed(() => ({
+    dateFormat: 'dd/MM/yyyy',
+    pickerType: 'both',
+    hour24: true,
+    stepMinute: 15,
+    minDate: this.demoForm.startDateTime().value()
+  }));
+
+
+
+
   onPickerChange(field: keyof DemoFormModel, value: Date | null): void {
     this.lastEvent.set({ field, value });
   }
+
+ 
+
+
 }
